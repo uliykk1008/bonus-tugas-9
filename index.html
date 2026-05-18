@@ -278,28 +278,25 @@
 
   <div class="container">
 
-      <section>
-  <h2>01. Pengantar Extension Methods</h2>
+<section>
+  <h2>Soal 1 – Konflik Nama Antar Extension</h2>
 
   <p>
-    Extension Methods merupakan fitur pada bahasa Dart yang
-    digunakan untuk menambahkan method atau fungsi baru pada
-    tipe data yang sudah ada seperti String, List, dan lainnya.
+    Pada kode tersebut terjadi konflik karena terdapat dua
+    extension dengan nama method yang sama yaitu toInt()
+    pada tipe data String.
   </p>
 
   <p>
-    Dengan fitur ini, programmer tidak perlu mengubah kode asli
-    dari tipe data tersebut sehingga kode tetap aman dan lebih rapi.
+    Walaupun tipe return berbeda, Dart tetap menganggap
+    pemanggilan method tersebut ambigu sehingga program
+    tidak dapat dikompilasi.
   </p>
 
   <p>
-    Extension Methods mulai tersedia sejak Dart versi 2.7 dan
-    membantu penulisan kode menjadi lebih mudah dipahami.
-  </p>
-
-  <p>
-    Analogi sederhananya seperti memberikan kemampuan baru pada
-    sebuah benda tanpa harus mengubah bentuk asli benda tersebut.
+    Solusi yang dapat dilakukan yaitu mengganti nama method
+    atau menggunakan extension override agar kedua extension
+    tetap dapat digunakan tanpa konflik.
   </p>
 
   <div class="code-container">
@@ -308,50 +305,56 @@
 // NIM   : 251410008
 // Kelas : SI2A
 
-extension NameFormatter on String {
+extension StringNumber on String {
 
-  String makeTitleCase() {
+  int convertToInt() {
 
-    if (isEmpty) {
-      return this;
-    }
+    return int.parse(this);
+  }
+}
 
-    return this[0].toUpperCase() +
-        substring(1).toLowerCase();
+extension StringDouble on String {
+
+  double convertToDouble() {
+
+    return double.parse(this);
   }
 }
 
 void main() {
 
-  var username = 'uliya';
+  String angka = '123';
 
-  print(username.makeTitleCase());
+  print(angka.convertToInt());
+
+  print(angka.convertToDouble());
 }
 </code></pre>
   </div>
 
-  <button onclick="openModal('https://dartpad.dev/?id=15f1e2039e88a7a86015e485824d867e&run=true')">Run Program</button>
+  <button onclick="openModal('https://dartpad.dev/?id=0e3b5c71e38f44a6efb0ae2daa119f92&run=true')">Run Program</button>
    </section>
-
-    <section>
-  <h2>02.Masalah Tanpa Extension Methods</h2>
+    
+<section>
+  <h2>Soal 2 – Extension Method dan Member Private</h2>
 
   <p>
-    Sebelum adanya Extension Methods, programmer biasanya
-    menggunakan utility class untuk menambahkan fungsi pada
-    tipe data tertentu.
+    Kode gagal dikompilasi karena extension tidak dapat
+    mengakses member private yang ditandai dengan simbol
+    underscore (_).
   </p>
 
   <p>
-    Cara tersebut membuat penulisan kode menjadi lebih panjang
-    dan kurang praktis karena method harus dipanggil melalui
-    class tambahan.
+    Member private hanya bisa digunakan di dalam class
+    yang sama sehingga extension di luar class tidak
+    memiliki akses langsung ke _value.
   </p>
 
   <p>
-    Selain itu, penggunaan utility class juga membuat kode
-    terlihat kurang natural dan sedikit lebih sulit dibaca.
+    Cara memperbaikinya yaitu dengan menambahkan getter
+    publik pada class tanpa mengubah _value menjadi public.
   </p>
+</section>
 
   <div class="code-container">
     <div class="code-header">DART SOURCE CODE</div>
@@ -359,32 +362,41 @@ void main() {
 // NIM   : 251410008
 // Kelas : SI2A
 
-class TextHelper {
+class Counter {
 
-  static String makeUpper(String value) {
+  int _value = 0;
 
-    if (value.isEmpty) {
-      return value;
-    }
+  void increment() {
 
-    return value[0].toUpperCase() +
-        value.substring(1);
+    _value++;
+  }
+
+  int get value {
+
+    return _value;
+  }
+}
+
+extension CounterStats on Counter {
+
+  int getValue() {
+
+    return value;
   }
 }
 
 void main() {
 
-  var studentName = 'uliya';
+  var counter = Counter();
 
-  var result =
-      TextHelper.makeUpper(studentName);
+  counter.increment();
 
-  print(result);
+  print(counter.getValue());
 }
 </code></pre>
   </div>
 
-  <button onclick="openModal('https://dartpad.dev/?id=be0e8ed4f0e3d816c50a20ae1eabf351&run=true')">Run Program</button>
+  <button onclick="openModal('https://dartpad.dev/?id=6805aeb6c42cdb39872b3951ae16fc34&run=true')">Run Program</button>
 </section>
 
     
